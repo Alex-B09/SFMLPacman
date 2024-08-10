@@ -7,38 +7,6 @@
 
 #include "MovementTile.h"
 
-// TODO delete when not needed
-void Test12(sf::RenderWindow & window, float width, float height)
-{
-    float hDistance = height / 31;
-    float wDistance = width / 28;
-
-    for (int i = 0; i < 28; ++i)
-    {
-        auto currentWidth = (i + 1) * wDistance;
-        sf::Vertex line [] =
-        {
-            sf::Vertex(sf::Vector2f(currentWidth, 0)),
-            sf::Vertex(sf::Vector2f(currentWidth, height))
-        };
-
-        window.draw(line, 2, sf::Lines);
-    }
-
-    for (int i = 0; i < 31; ++i)
-    {
-        auto currentWidth = (i + 1) * hDistance;
-        sf::Vertex line [] =
-        {
-            sf::Vertex(sf::Vector2f(0, currentWidth)),
-            sf::Vertex(sf::Vector2f(width, currentWidth))
-        };
-
-        window.draw(line, 2, sf::Lines);
-    }
-}
-
-
 Game::Game(float scale)
     : m_sheet(scale)
     , m_map(m_sheet.GetMap())
@@ -46,7 +14,7 @@ Game::Game(float scale)
     , m_height(m_map.GetHeight())
     , m_width(m_map.GetWidth())
 {
-    m_window.create(sf::VideoMode(m_width, m_height, 32), "Test1");
+    m_window.create(sf::VideoMode(m_width, m_height, 32), "Pacman");
     m_window.setFramerateLimit(60);
 }
 
@@ -122,14 +90,10 @@ void Game::GameLoop()
                                                           m_map.GetTileSize(),
                                                           neighbors);
             pacman.SetPosition(nextPosition);
+            m_map.CollectPosition(nextPosition);
         }
 
         pacman.Draw(m_window, time);
-        
-        // TODO remove
-        //Test12(m_window, 
-        //       static_cast<float>(m_map.GetWidth()), 
-        //       static_cast<float>(m_map.GetHeight()));
 
         m_window.display();
     }

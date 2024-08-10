@@ -10,7 +10,6 @@ class Game
     sf::RenderWindow m_window;
     SpriteSheet m_sheet;
 
-    //sf::Sprite m_map;
     GameMap m_map;
     
     float m_scale;

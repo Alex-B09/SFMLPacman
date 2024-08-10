@@ -50,6 +50,8 @@ public:
     TilePosition GetStartingTile() const;
     TileInformation GetTileSize() const;
 
+    void CollectPosition(const Position POSITION);
+
 private:
     void LoadLayout(const std::string FILE_NAME);
 };

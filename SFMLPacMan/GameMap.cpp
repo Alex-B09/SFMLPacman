@@ -17,6 +17,14 @@ using AvailableMovements = GameMap::AvailableMovements;
 using Neighbors = GameMap::Neighbors;
 
 
+namespace 
+{
+    bool IsWithinBounds(const int value, const int min, const int max)
+    {
+        return value >= min && value < max;
+    }
+}
+
 GameMap::GameMap(sf::Sprite sprite)
     :m_sprite(sprite)
     , m_elements(NB_ELEMENTS_HEIGHT * NB_ELEMENTS_WIDHT)
@@ -89,7 +97,7 @@ int GameMap::GetWidth() const
 TilePosition GameMap::GetStartingTile() const
 {
     //  the "- cbegin()" is to get the current position of the element and not the iterator
-    auto gridPosition = static_cast<int>(std::find(m_elements.cbegin(), m_elements.cend(), MapElement::STARTING_POSITION) - m_elements.cbegin());
+    int gridPosition = static_cast<int>(std::find(m_elements.cbegin(), m_elements.cend(), MapElement::STARTING_POSITION) - m_elements.cbegin());
 
     int rowPosition = gridPosition / NB_ELEMENTS_WIDHT;
     int columnPosition = gridPosition % NB_ELEMENTS_WIDHT;
@@ -163,4 +171,24 @@ Neighbors GameMap::GetNeighbors(const TilePosition TILE) const
 TileInformation GameMap::GetTileSize() const
 {
     return {m_tileWidth, m_tileHeight};
+}
+
+void GameMap::CollectPosition(const Position POSITION)
+{
+	const auto TILE = Movement::GetTile(POSITION, GetTileSize());
+
+    // validate that the position is within the map
+    if (IsWithinBounds(TILE.x, 0, GetWidth()) &&
+        IsWithinBounds(TILE.y, 0, GetHeight()))
+    {
+        const int TILE_INDEX = TILE.y * NB_ELEMENTS_WIDHT + TILE.x;
+
+        if (TILE_INDEX < m_elements.size())
+        {
+            if (m_elements[TILE_INDEX] == MapElement::DOT || m_elements[TILE_INDEX] == MapElement::PILL)
+            {
+                m_elements[TILE_INDEX] = MapElement::FREE_WAY;
+            }
+        }
+    }
 }
